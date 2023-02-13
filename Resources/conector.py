@@ -16,16 +16,10 @@ class database:
             print('Creating a Database... students')
 
     def view_students(self):
-        global data
-        for data in self.col_students.find(): 
-            print(data)
-        return data
+        return self.col_students.find()
 
     def view_student_specific(self, student_id):
-        global data
-        for data in self.col_students.find({"_id": student_id}):
-            print(data)
-        return data
+        return self.col_students.find({"_id": student_id})
 
     def insert_student(self, information):
         try:

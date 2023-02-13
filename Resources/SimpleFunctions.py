@@ -15,7 +15,6 @@ Los comandos disponibles son:
 /start - Saludame y veras si estoy viva.
 /help - Invoca este mensaje de ayuda.
 /rules - Invoca las reglas de la comunidad.
-/quees - Busca alguna definicion de algo.
 
 Create by: @al3x_argu
 Code: github.com/JorgeArguello1999
