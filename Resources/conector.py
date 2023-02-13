@@ -36,14 +36,31 @@ class database:
                 'claims': int(information[3]), # claims: Int
                 'times_clean': int(information[4]) # How many times clean a classrom: Int
             })
-            self.view_students()
             return True
         except:
             print('Error as ocurred')
             return False
 
-    def update_student(self, infromation):
-        pass
+    def update_student(self, student_id, information):
+        for i in information:
+            print(i)
+
+        try: 
+            self.col_students.update_one(
+                {'_id': student_id},
+                {'$set':
+                    {
+                        'name': information[1],
+                        'user': information[2],
+                        'claims': int(information[3]),
+                        'times_clean': int(information[4])
+                    }
+                }
+            )
+            return True
+        except:
+            print('Error as ocurred')
+            return False
 
     def delete_student(self, student_id):
         try:
@@ -63,7 +80,6 @@ if __name__ == '__main__':
     _id = int(input('_id: '))
     main.view_student_specific(_id)
 
-    """
     print('-------Insert')
     information = [
         input('id: '),
@@ -73,7 +89,17 @@ if __name__ == '__main__':
         input('number of times clean curse: '),
     ]
     main.insert_student(information)
-    """
+
+    print('-------Update')
+    _id = int(input('_id: '))
+    information = [
+        input('id: '),
+        input('name: '),
+        input('user: '),
+        input('claims: '),
+        input('number of times clean curse: '),
+    ]
+    main.update_student(_id, information)
 
     print('-------Delete')
     _id = int(input('id: '))
