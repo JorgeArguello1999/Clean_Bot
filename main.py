@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler
 from telegram import update, ChatAction
 
 # Database 
-from Resources import conector
+from Resources import Conector_Students as conector 
 
 db = conector.database()
 
@@ -33,17 +33,14 @@ def rules(update, context):
 def list_students(update, context):
     """Enlistar alumnos"""
     answer = db.view_students()
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    info = []
     for data in answer:
-        info = f'''
-ID : {data['_id']}
-Nombre: {data['name']}
-Usuario: {data['user']}
-Reclamos: {data['claims']}
-Veces que ha limpiado: {data['times_clean']}
-            '''
-        print(info)
-        context.bot.send_message(chat_id=update.effective_chat.id, text=str(info))
+        text = f'{data["name"]}: {data["_id"]}'
+        info.append(text)
+
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=str(info))
+    print(info)
 
 
 def list_student_specific(update, context):
@@ -65,10 +62,22 @@ Veces que ha limpiado: {data['times_clean']}
 
 def insert_student(update, context):
     """Insertar alumno"""
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    insert = (" ".join(context.args)).split(",")
+    answer = db.insert_student(insert)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
+    print('/insert', insert)
 
+def delete_student(update, context):
+    """Insertar alumno"""
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    insert = int(" ".join(context.args))
+    answer = db.delete_student(insert)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
+    print('/delete', insert)
 
 #Start TelBot 
-token ='5720318591:AAE_CEfcSwvL2zq1k-KC27iZhSnoGUNDvlE'
+token ='5720318591:AAE_CEfcSwvL2zq1k-KC27iZhSnoGUNDvl'
 updater = Updater(token=token, use_context=True)
 
 start_handler = CommandHandler("start", start)
@@ -76,11 +85,15 @@ help_handler = CommandHandler("help", help)
 rules_handler = CommandHandler("rules", rules)
 list_students_handler = CommandHandler("list", list_students)
 list_student_specific_handler = CommandHandler("list_st", list_student_specific)
+insert_student_handler = CommandHandler("insert", insert_student)
+delete_student_handler = CommandHandler("delete", delete_student)
 
 updater.dispatcher.add_handler(start_handler)
 updater.dispatcher.add_handler(help_handler)
 updater.dispatcher.add_handler(rules_handler)
 updater.dispatcher.add_handler(list_students_handler)
 updater.dispatcher.add_handler(list_student_specific_handler)
+updater.dispatcher.add_handler(insert_student_handler)
+updater.dispatcher.add_handler(delete_student_handler)
 
 updater.start_polling()

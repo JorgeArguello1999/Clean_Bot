@@ -12,9 +12,11 @@ help = """
 Hi, mi nombre es 3lli0t_04 aqui podras aprender a usarme :)
 Los comandos disponibles son:
 
-/start - Saludame y veras si estoy viva.
+/start - Saludame y veras si estoy vivo.
 /help - Invoca este mensaje de ayuda.
 /rules - Invoca las reglas de la comunidad.
+/list - Enlista a todos los alumnos y su número de lista
+/list_st x - Cambia la 'x' por tu número de lista para ver infromación detallada
 
 Create by: @al3x_argu
 Code: github.com/JorgeArguello1999

@@ -1,4 +1,5 @@
 import pymongo
+import UnitTest
 
 class database:
     def __init__(self):
@@ -17,6 +18,7 @@ class database:
 
     def view_students(self):
         return self.col_students.find()
+        
 
     def view_student_specific(self, student_id):
         return self.col_students.find({"_id": student_id})
@@ -65,36 +67,4 @@ class database:
             return False
 
 if __name__ == '__main__':
-    main = database()
-
-    print('-------View')
-    main.view_students()
-
-    print('-------View Specific')
-    _id = int(input('_id: '))
-    main.view_student_specific(_id)
-
-    print('-------Insert')
-    information = [
-        input('id: '),
-        input('name: '),
-        input('user: '),
-        input('claims: '),
-        input('number of times clean curse: '),
-    ]
-    main.insert_student(information)
-
-    print('-------Update')
-    _id = int(input('_id: '))
-    information = [
-        input('id: '),
-        input('name: '),
-        input('user: '),
-        input('claims: '),
-        input('number of times clean curse: '),
-    ]
-    main.update_student(_id, information)
-
-    print('-------Delete')
-    _id = int(input('id: '))
-    main.delete_student(_id)
+    UnitTest.ConStudents()
