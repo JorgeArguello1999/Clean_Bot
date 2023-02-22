@@ -1,4 +1,5 @@
-import Conector_Students as conector
+"""
+import Resources.Conector_Students as conector
 
 main = conector.database()
 
@@ -37,3 +38,4 @@ def ConStudents():
     print('-------Delete')
     _id = int(input('id: '))
     main.delete_student(_id)
+"""

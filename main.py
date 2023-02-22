@@ -4,6 +4,9 @@ from telegram import update, ChatAction
 # Database 
 from Resources import Conector_Students as conector 
 
+# Token
+from Resources import token
+
 db = conector.database()
 
 #Commands
@@ -68,6 +71,23 @@ def insert_student(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
     print('/insert', insert)
 
+def update_student(update, context):
+    """Actualizar alumno"""
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    insert = (" ".join(context.args)).split(",")
+    answer = db.update_student(insert[0], insert)
+    setup = """
+ID
+Nombre
+User
+Reclamos
+Veces que se limpio
+    """
+    context.bot.send_message(chat_id=update.effective_chat.id, text=(setup + str(answer)))
+    print('/update', insert)
+
+
+
 def delete_student(update, context):
     """Insertar alumno"""
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
@@ -77,7 +97,7 @@ def delete_student(update, context):
     print('/delete', insert)
 
 #Start TelBot 
-token ='5720318591:AAE_CEfcSwvL2zq1k-KC27iZhSnoGUNDvl'
+token = token.token_tel() 
 updater = Updater(token=token, use_context=True)
 
 start_handler = CommandHandler("start", start)
@@ -86,6 +106,7 @@ rules_handler = CommandHandler("rules", rules)
 list_students_handler = CommandHandler("list", list_students)
 list_student_specific_handler = CommandHandler("list_st", list_student_specific)
 insert_student_handler = CommandHandler("insert", insert_student)
+update_student_handler = CommandHandler("update", update_student)
 delete_student_handler = CommandHandler("delete", delete_student)
 
 updater.dispatcher.add_handler(start_handler)
@@ -94,6 +115,7 @@ updater.dispatcher.add_handler(rules_handler)
 updater.dispatcher.add_handler(list_students_handler)
 updater.dispatcher.add_handler(list_student_specific_handler)
 updater.dispatcher.add_handler(insert_student_handler)
+updater.dispatcher.add_handler(update_student_handler)
 updater.dispatcher.add_handler(delete_student_handler)
 
 updater.start_polling()

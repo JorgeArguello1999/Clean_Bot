@@ -1,5 +1,5 @@
 import pymongo
-import UnitTest
+# import Resources.UnitTest as UnitTest 
 
 class database:
     def __init__(self):
@@ -67,4 +67,5 @@ class database:
             return False
 
 if __name__ == '__main__':
-    UnitTest.ConStudents()
+    #UnitTest.ConStudents()
+    print(0)
