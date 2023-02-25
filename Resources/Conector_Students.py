@@ -30,26 +30,28 @@ class database:
                 'name': information[1], # Complete name: String
                 'user': information[2], # User fot Telegram: String
                 'claims': int(information[3]), # claims: Int
-                'times_clean': int(information[4]) # How many times clean a classrom: Int
+                'times_clean': int(information[4]), # How many times clean a classrom: Int
+                'last_time': information[5]
             })
             return True
         except:
             print('Error as ocurred')
             return False
 
-    def update_student(self, student_id, information):
+    def update_student(self, information):
         for i in information:
             print(i)
 
         try: 
             self.col_students.update_one(
-                {'_id': student_id},
+                {'_id': information[0]},
                 {'$set':
                     {
                         'name': information[1],
                         'user': information[2],
                         'claims': int(information[3]),
-                        'times_clean': int(information[4])
+                        'times_clean': int(information[4]),
+                        'last_time': information[5]
                     }
                 }
             )
@@ -61,6 +63,22 @@ class database:
     def delete_student(self, student_id):
         try:
             self.col_students.delete_one({'_id': student_id})
+            return True
+        except:
+            print('Error as ocurred')
+            return False
+
+    def confirm(self, information):
+        try:
+            self.col_students.update_one(
+                {'_id': information[0]},
+                {'$set':
+                 {
+                     'times_clean' : information[1],
+                     'last_time':  information[2]
+                 }
+                }
+            )
             return True
         except:
             print('Error as ocurred')

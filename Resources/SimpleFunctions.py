@@ -17,9 +17,20 @@ Los comandos disponibles son:
 /rules - Invoca las reglas de la comunidad.
 /list - Enlista a todos los alumnos y su número de lista
 /list_st x - Cambia la 'x' por tu número de lista para ver infromación detallada
+/confirm x - Confirma la limpieza del estudiante
 
 Create by: @al3x_argu
 Code: github.com/JorgeArguello1999
+"""
+
+help_admin = """
+Estos son los comandos para los administradores
+/insert -> Ingresa un nuevo estudiante de la siguiente manera:
+> /insert 1, 3lli0t_04, telegram_user, #reclamos, #veceslimpieza
+/update -> Actualiza la información de un estudiante
+> /update 1, 3lli0t_04, telegram_user, #reclamos, #veceslimpieza
+/delete -> Elimina un estudiante
+> /delete 1
 """
 
 rules = """
@@ -37,6 +48,5 @@ Reglas:
 """
 
 # Function Hi
-
 def send_saludo():
     return choice(saludo) 
