@@ -16,7 +16,7 @@ Los comandos disponibles son:
 /help - Invoca este mensaje de ayuda.
 /rules - Invoca las reglas de la comunidad.
 /list - Enlista a todos los alumnos y su número de lista
-/list_st x - Cambia la 'x' por tu número de lista para ver infromación detallada
+/list x - Cambia x por tu número de lista y te da información detallada
 /confirm x - Confirma la limpieza del estudiante
 
 Create by: @al3x_argu

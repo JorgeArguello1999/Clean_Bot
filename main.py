@@ -9,7 +9,6 @@ db = conector.database()
 # Date
 from datetime import datetime
 
-
 #Commands
 def start(update, context):
     """Saluda a hikari"""
@@ -24,16 +23,11 @@ def help(update, context):
     from Resources.SimpleFunctions import help
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     context.bot.send_message(chat_id=update.effective_chat.id, text=help)
-    #Debub
+    if update.message.from_user.first_name == 'Hola. Al3x': # I'm admin
+        from Resources.SimpleFunctions import help_admin
+        context.bot.send_message(chat_id=update.effective_chat.id, text=help_admin)
+        print('Comando ejecutado: help admin')
     print('Comando ejecutado: help')
-
-def help_admin(update, context):
-    """ Acerca de Hikari Bot"""
-    from Resources.SimpleFunctions import help_admin
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=help_admin)
-    #Debub
-    print('Comando ejecutado: help admin')
 
 def rules(update, context):
     """Reglas de la comunidad AprenderPython"""
@@ -43,60 +37,50 @@ def rules(update, context):
     print('Comando ejecutado: rules')
 
 # Here beign a Students functions
-
 def list_students(update, context):
     """Enlistar alumnos"""
-    answer = db.view_students()
-    info = []
-    for data in answer:
-        text = f'{data["name"]}: {data["_id"]}'
-        info.append(text)
-
+    answer=list(map(lambda x: (f'''{x['_id']}, {x['name']}'''), db.view_students()))
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=str(info))
-    print(info)
-
-
-def list_student_specific(update, context):
-    """Enlistar alumno especifico"""
-    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    student_id= int(" ".join(context.args))
-    answer =  db.view_student_specific(student_id)
-    for data in answer:
+    try:
+        student_id= int("".join(context.args))
+        answer =  list(map(lambda x:x, db.view_student_specific(student_id)))
+        answer = answer[0]
         info = f'''
-ID : {data['_id']}
-Nombre: {data['name']}
-Usuario: {data['user']}
-Reclamos: {data['claims']}
-Veces que ha limpiado: {data['times_clean']}
-Última limpieza: {data['last_time']}
+ID : {answer['_id']}
+Nombre: {answer['name']}
+Usuario: {answer['user']}
+Reclamos: {answer['claims']}
+Veces que ha limpiado: {answer['times_clean']}
+Última limpieza: {answer['last_time']}
             '''
-        # update.message.reply_text(answer)   
         context.bot.send_message(chat_id=update.effective_chat.id, text=str(info))
-        print('/list_st', info)
+    except:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
+    print("/list", answer)
 
 def insert_student(update, context):
     """Insertar alumno"""
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     insert = (" ".join(context.args)).split(",")
-    answer = db.insert_student(insert)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
-    print('/insert', insert)
+    answer = db.update_student(insert)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=(str(answer)))
+    print('/insert', answer)
+ 
 
 def update_student(update, context):
     """Actualizar alumno"""
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     insert = (" ".join(context.args)).split(",")
-    answer = db.update_student(insert)
-    setup = """
+    setup = '''
 ID
 Nombre
-User
+Usuario
 Reclamos
 Veces que se limpio
-Última limpieza
-    """
-    context.bot.send_message(chat_id=update.effective_chat.id, text=(setup + str(answer)))
+Última vez que limpio
+    '''
+    answer = db.update_student(insert)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=(setup, str(answer)))
     print('/update', insert)
 
 
@@ -111,22 +95,17 @@ def delete_student(update, context):
 def confirm(update, context):
     """Confirmar limpieza"""
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
-    # Input only ID
     insert = int(" ".join(context.args))
     # Date and counter
-    last_time = str(datetime.now())
-    times = list(
-        map(
-            lambda x:x, db.view_student_specific(insert)
-        )
-    )
-    count = times[0]
-
+    times = list(map(lambda x:(
+        x['times_clean']
+    ), db.view_student_specific(insert)))
     information = [
         insert, # ID 
-        (count['times_clean']+1),# Times clean
-        last_time
+        (times[0]+1),# Times clean
+        str(datetime.now())
     ]
+    print(information)
     answer = db.confirm(information)
     context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
     print('/confirm', insert, information)
@@ -139,10 +118,8 @@ updater = Updater(token=token, use_context=True)
 
 start_handler = CommandHandler("start", start)
 help_handler = CommandHandler("help", help)
-help_admin_handler = CommandHandler("help_admin", help_admin)
 rules_handler = CommandHandler("rules", rules)
 list_students_handler = CommandHandler("list", list_students)
-list_student_specific_handler = CommandHandler("list_st", list_student_specific)
 insert_student_handler = CommandHandler("insert", insert_student)
 update_student_handler = CommandHandler("update", update_student)
 delete_student_handler = CommandHandler("delete", delete_student)
@@ -150,10 +127,8 @@ confirm_handler = CommandHandler("confirm", confirm)
 
 updater.dispatcher.add_handler(start_handler)
 updater.dispatcher.add_handler(help_handler)
-updater.dispatcher.add_handler(help_admin_handler)
 updater.dispatcher.add_handler(rules_handler)
 updater.dispatcher.add_handler(list_students_handler)
-updater.dispatcher.add_handler(list_student_specific_handler)
 updater.dispatcher.add_handler(insert_student_handler)
 updater.dispatcher.add_handler(update_student_handler)
 updater.dispatcher.add_handler(delete_student_handler)
