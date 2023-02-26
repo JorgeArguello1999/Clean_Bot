@@ -2,12 +2,16 @@ from telegram.ext import Updater, CommandHandler
 from telegram import update, ChatAction
 
 # Database and token 
-from Resources import token
+from Resources import MyTokens as token 
+from Resources import MyTokens as token_o 
 from Resources import Conector_Students as conector 
 db = conector.database()
 
 # Date
 from datetime import datetime
+
+# Open AI
+from Resources import ChatGPT
 
 #Commands
 def start(update, context):
@@ -35,6 +39,16 @@ def rules(update, context):
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     context.bot.send_message(chat_id=update.effective_chat.id, text=rules)
     print('Comando ejecutado: rules')
+
+def quees(update, context):
+    """Busqueda de definiciones"""
+    from Resources.SimpleFunctions import definiciones
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    user_say = " ".join(context.args)
+    answer = definiciones(user_say)
+    update.message.reply_text(answer)   
+    print("/quees", user_say)
+
 
 # Here beign a Students functions
 def list_students(update, context):
@@ -110,7 +124,13 @@ def confirm(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
     print('/confirm', insert, information)
 
-
+def chat_gpt(update, context):
+    """Usa GPT-3 para resolver tus dudas"""
+    context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    insert = (" ".join(context.args))
+    answer = ChatGPT.chatgpt(token_o.openai(), insert)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
+    print('/gpt', insert)
 
 #Start TelBot 
 token = token.token_tel() 
@@ -119,19 +139,23 @@ updater = Updater(token=token, use_context=True)
 start_handler = CommandHandler("start", start)
 help_handler = CommandHandler("help", help)
 rules_handler = CommandHandler("rules", rules)
+quees_handler = CommandHandler("quees", quees)
 list_students_handler = CommandHandler("list", list_students)
 insert_student_handler = CommandHandler("insert", insert_student)
 update_student_handler = CommandHandler("update", update_student)
 delete_student_handler = CommandHandler("delete", delete_student)
 confirm_handler = CommandHandler("confirm", confirm)
+chat_gpt_handler = CommandHandler("gpt", chat_gpt)
 
 updater.dispatcher.add_handler(start_handler)
 updater.dispatcher.add_handler(help_handler)
 updater.dispatcher.add_handler(rules_handler)
+updater.dispatcher.add_handler(quees_handler)
 updater.dispatcher.add_handler(list_students_handler)
 updater.dispatcher.add_handler(insert_student_handler)
 updater.dispatcher.add_handler(update_student_handler)
 updater.dispatcher.add_handler(delete_student_handler)
 updater.dispatcher.add_handler(confirm_handler)
+updater.dispatcher.add_handler(chat_gpt_handler)
 
 updater.start_polling()

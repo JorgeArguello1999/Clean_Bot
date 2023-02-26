@@ -1,4 +1,5 @@
 from random import choice
+import wikipedia
 
 saludo = [
     "saludo",
@@ -46,6 +47,17 @@ Reglas:
 4.)Antes de hacer una pregunta investigar.
 
 """
+
+def definiciones(palabra):
+    """ Definiciones de palabras """
+    wikipedia.set_lang("es")
+        
+    try: 
+        resumen = wikipedia.summary(palabra, sentences = 1)
+        url = (wikipedia.page(palabra).url)
+        return (resumen + "\n\nMas info: " + url)
+    except: 
+        return "No se ha encontrado esta definicion..."
 
 # Function Hi
 def send_saludo():
