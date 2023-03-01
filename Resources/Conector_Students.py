@@ -4,8 +4,8 @@ import pymongo
 class database:
     def __init__(self):
         # In this URL you change de username:password
-        # By default use admin and admin
-        self.myclient = pymongo.MongoClient("mongodb://admin:admin@localhost:27017/?authMechanism=DEFAULT")
+        # By default use admin and admi
+        self.myclient = pymongo.MongoClient("mongodb://mongo:uqKqt0hEDZBtJ0cvh0pg@containers-us-west-111.railway.app:7104")
         self.db_students = self.myclient['students']
         self.col_students = self.db_students["students"]
         
