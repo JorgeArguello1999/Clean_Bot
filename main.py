@@ -2,8 +2,6 @@ from telegram.ext import Updater, CommandHandler
 from telegram import update, ChatAction
 
 # Database and token 
-from Resources import MyTokens as token 
-from Resources import MyTokens as token_o 
 from Resources import Conector_Students as conector 
 db = conector.database()
 
