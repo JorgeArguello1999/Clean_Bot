@@ -7,6 +7,9 @@ from Resources import MyTokens as token_o
 from Resources import Conector_Students as conector 
 db = conector.database()
 
+# Varibale Env
+import os
+
 # Date
 from datetime import datetime
 
@@ -128,12 +131,12 @@ def chat_gpt(update, context):
     """Usa GPT-3 para resolver tus dudas"""
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     insert = (" ".join(context.args))
-    answer = ChatGPT.chatgpt(token_o.openai(), insert)
+    answer = ChatGPT.chatgpt(os.getenv("OPENAI_TOKEN"), insert)
     context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
     print('/gpt', insert)
 
 #Start TelBot 
-token = token.token_tel() 
+token = os.getenv("TELEGRAM_TOKEN") 
 updater = Updater(token=token, use_context=True)
 
 start_handler = CommandHandler("start", start)
