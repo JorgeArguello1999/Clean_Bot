@@ -1,4 +1,5 @@
 import pymongo
+from pymongo import errors
 # import Resources.UnitTest as UnitTest 
 
 class database:
@@ -11,10 +12,10 @@ class database:
         
         databases = self.myclient.list_database_names()
         print(databases)
-        if "students" in databases:
+        if "school" in databases:
             print('Database is exists')
         else:
-            print('Creating a Database... students')
+            print('Creating a Database... school')
 
     def view_students(self):
         return self.col_students.find()
@@ -32,26 +33,23 @@ class database:
                 'times_clean': int(information[3]), # How many times clean a classrom: Int
                 'last_time': information[4] # Date
             })
-            print(information)
             return True
-        except:
-            print('Error as ocurred')
+        except errors.PyMongoError as e:
+            print('Error as ocurred', e)
             return False
 
     def update_student(self, information):
         for i in information:
             print(i)
-
         try: 
             self.col_students.update_one(
                 {'_id': information[0]},
                 {'$set':
                     {
                         'name': information[1],
-                        'user': information[2],
-                        'claims': int(information[3]),
-                        'times_clean': int(information[4]),
-                        'last_time': information[5]
+                        'claims': int(information[2]),
+                        'times_clean': int(information[3]),
+                        'last_time': information[4]
                     }
                 }
             )

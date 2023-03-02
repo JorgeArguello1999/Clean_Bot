@@ -27,7 +27,7 @@ Code: github.com/JorgeArguello1999
 help_admin = """
 Estos son los comandos para los administradores
 /insert -> Ingresa un nuevo estudiante de la siguiente manera:
-> /insert 1, 3lli0t_04, telegram_user, #reclamos, #veceslimpieza
+> /insert 1, 3lli0t_04, #reclamos, #veceslimpieza, #date
 /update -> Actualiza la información de un estudiante
 > /update 1, 3lli0t_04, telegram_user, #reclamos, #veceslimpieza
 /delete -> Elimina un estudiante

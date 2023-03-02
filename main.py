@@ -62,7 +62,6 @@ def list_students(update, context):
         info = f'''
 ID : {answer['_id']}
 Nombre: {answer['name']}
-Usuario: {answer['user']}
 Reclamos: {answer['claims']}
 Veces que ha limpiado: {answer['times_clean']}
 Última limpieza: {answer['last_time']}
@@ -76,7 +75,7 @@ def insert_student(update, context):
     """Insertar alumno"""
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
     insert = (" ".join(context.args)).split(",")
-    answer = db.update_student(insert)
+    answer = db.insert_student(insert)
     context.bot.send_message(chat_id=update.effective_chat.id, text=(str(answer)))
     print('/insert', answer)
  
@@ -88,7 +87,6 @@ def update_student(update, context):
     setup = '''
 ID
 Nombre
-Usuario
 Reclamos
 Veces que se limpio
 Última vez que limpio
