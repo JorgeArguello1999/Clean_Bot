@@ -2,12 +2,12 @@ import pymongo
 # import Resources.UnitTest as UnitTest 
 
 class database:
-    def __init__(self):
+    def __init__(self, mongo):
         # In this URL you change de username:password
         # By default use admin and admi
-        self.myclient = pymongo.MongoClient("mongodb://mongo:uqKqt0hEDZBtJ0cvh0pg@containers-us-west-111.railway.app:7104")
-        self.db_students = self.myclient['students']
-        self.col_students = self.db_students["students"]
+        self.myclient = pymongo.MongoClient(mongo)
+        self.db_school= self.myclient['school']
+        self.col_students = self.db_school["students"]
         
         databases = self.myclient.list_database_names()
         print(databases)
@@ -28,11 +28,11 @@ class database:
             self.col_students.insert_one({
                 '_id': int(information[0]), # id: Int
                 'name': information[1], # Complete name: String
-                'user': information[2], # User fot Telegram: String
-                'claims': int(information[3]), # claims: Int
-                'times_clean': int(information[4]), # How many times clean a classrom: Int
-                'last_time': information[5]
+                'claims': int(information[2]), # claims: Int
+                'times_clean': int(information[3]), # How many times clean a classrom: Int
+                'last_time': information[4] # Date
             })
+            print(information)
             return True
         except:
             print('Error as ocurred')

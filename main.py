@@ -2,11 +2,10 @@ from telegram.ext import Updater, CommandHandler
 from telegram import update, ChatAction
 
 # Database and token 
-from Resources import Conector_Students as conector 
-db = conector.database()
-
-# Varibale Env
 import os
+from Resources import Conector_Students as conector 
+db = conector.database(os.getenv('MONGO'))
+
 
 # Date
 from datetime import datetime
