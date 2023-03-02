@@ -53,12 +53,11 @@ def quees(update, context):
 # Here beign a Students functions
 def list_students(update, context):
     """Enlistar alumnos"""
-    answer=list(map(lambda x: (f'''{x['_id']}, {x['name']}'''), db.view_students()))
     context.bot.send_chat_action(chat_id=update.effective_chat.id, action=ChatAction.TYPING)
+    answer=list(map(lambda x: (f'''{x['_id']}, {x['name']}'''), db.view_students()))
     try:
         student_id= int("".join(context.args))
-        answer =  list(map(lambda x:x, db.view_student_specific(student_id)))
-        answer = answer[0]
+        answer =  list(map(lambda x:x, db.view_student_specific(student_id)))[0]
         info = f'''
 ID : {answer['_id']}
 Nombre: {answer['name']}
@@ -110,17 +109,33 @@ def confirm(update, context):
     insert = int(" ".join(context.args))
     # Date and counter
     times = list(map(lambda x:(
+        x['_id'],
         x['times_clean']
-    ), db.view_student_specific(insert)))
-    information = [
+    ), db.view_student_specific(insert)))[0]
+
+    answer = db.confirm([
         insert, # ID 
-        (times[0]+1),# Times clean
+        (times[1]+1),# Times clean
         str(datetime.now())
-    ]
-    print(information)
-    answer = db.confirm(information)
+    ])
+
+    longitud = list(map(lambda x:x, db.view_students()))
+    if insert >= 1 and insert < len(longitud):
+        student = insert+1
+    else:
+        student = 1
+        
+    out = list(map(lambda x:x, db.view_student_specific(student)))[0]
+    out = out['_id'], out['name']
+
+
+    answer = f'''
+{answer}, 
+Siguiente estudiante: {out[0]}: {out[1]}
+    '''
+
     context.bot.send_message(chat_id=update.effective_chat.id, text=str(answer))
-    print('/confirm', insert, information)
+    print('/confirm', insert, answer)
 
 def chat_gpt(update, context):
     """Usa GPT-3 para resolver tus dudas"""
